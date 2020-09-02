@@ -1,0 +1,36 @@
+/* 通过webpack做到模块化   */
+
+.popup {
+  position: fixed;
+  z-index: 10;
+  border: 1px gray solid;
+}
+
+.popup-title {
+  height: 60px;
+  background-color: #f5f5f5;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.popup-title h3 {
+  margin-left: 20px;
+  font-size: 18px;
+}
+.popup-title i {
+  font-size: 18px;
+  margin-right: 20px;
+  cursor: pointer;
+}
+.popup-content {
+  height: calc(100% - 60px);
+  background: #a00;
+}
+
+.mask {
+  position: absolute;
+  left: 0;
+  top: 0;
+  z-index: 5;
+  background: rgba(0, 0, 0, 0.5);
+}
