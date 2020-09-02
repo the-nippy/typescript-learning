@@ -24,7 +24,7 @@
   background: #222223;
 }
 .video-progress-now {
-  width: 50%;
+  width: 0;
   height: 100%;
   background: #ff6a03;
   position: absolute;
@@ -32,7 +32,7 @@
   z-index: 1;
 }
 .video-progress-suc {
-  width: 70%;
+  width: 0;
   height: 100%;
   background: #666;
   position: absolute;
@@ -77,6 +77,7 @@
 .video-full i {
   font-size: 20px;
   color: #fff;
+  cursor: pointer;
 }
 .video-volume {
   float: right;
