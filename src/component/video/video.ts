@@ -1,7 +1,7 @@
 /*
  * @Author: xuwei
  * @Date: 2020-08-30 17:05:28
- * @LastEditTime: 2020-09-02 23:56:34
+ * @LastEditTime: 2020-09-03 01:00:32
  * @LastEditors: xuwei
  * @Description:
  */
@@ -91,7 +91,7 @@ class Video implements Icomponnet {
 
   handle() {
     let timer;
-    let videoContent = this.tempContainer.querySelector(
+    let videoContent: HTMLVideoElement = this.tempContainer.querySelector(
       `.${styles["video-content"]}`
     );
     let videoControls = this.tempContainer.querySelector(
@@ -105,23 +105,32 @@ class Video implements Icomponnet {
       `.${styles["video-time"]} span`
     );
 
+    let videoFull = this.tempContainer.querySelector(
+      `.${styles["video-full"]} i`
+    );
+
+    let videoProgress = this.tempContainer.querySelectorAll(
+      `.${styles["video-progress"]} div`
+    );
+
     // 视频加载完毕
     videoContent.addEventListener("canplay", () => {
       videoPlay.className = "iconfont icon-bofang";
+      // videoPlay.style.fontSize = "20px";
       videoTimes[1].innerHTML = formatTime(videoContent.duration);
     });
 
     // 播放事件
     videoContent.addEventListener("play", () => {
+      // videoPlay.style.fontSize = "24px";
       videoPlay.className = "iconfont icon-zanting";
-      videoPlay.style.fontSize = "24px";
       timer = setInterval(playing, 1000);
     });
 
     // 暂停事件
     videoContent.addEventListener("pause", () => {
+      // videoPlay.style.fontSize = "20px";
       videoPlay.className = "iconfont icon-bofang";
-      videoPlay.style.fontSize = "20px";
       clearInterval(timer);
     });
 
@@ -134,9 +143,44 @@ class Video implements Icomponnet {
       }
     });
 
+    // 全屏
+    videoFull.addEventListener("click", () => {
+      videoContent.requestFullscreen(); //通过给 videoContent 添加类型，可以得到 api 提示，TS 真的香～
+    });
+
+    videoProgress[2].addEventListener("mousedown", function (ev: MouseEvent) {
+      console.info("this", this);
+
+      let downX = ev.pageX; //按下点的坐标
+      let downL = this.offsetLeft; //  到当前有定位的组件节点的左偏移
+      document.onmousemove = (ev: MouseEvent) => {
+        let scale =
+          (ev.pageX - downX + downL + 8) / this.parentNode.offsetWidth;
+        scale < 0 && (scale = 0);
+        scale > 1 && (scale = 1);
+        videoProgress[0].style.width = scale * 100 + "%";
+        videoProgress[1].style.width = scale * 100 + "%";
+        this.style.left = scale * 100 + "%";
+
+        videoContent.currentTime = scale * videoContent.duration;
+      };
+      document.onmouseup = () => {
+        document.onmousemove = document.onmouseup = null;
+      };
+      ev.preventDefault();
+
+      // Todo 拖动的时候暂停/播放图标状态变化有问题
+    });
+
+    //播放中
     function playing() {
-      //播放中
+      let scale = videoContent.currentTime / videoContent.duration;
+      let scaleSuc = videoContent.buffered.end(0) / videoContent.duration;
+      // videoProgress[0].style.width = formatTime(videoContent.currentTime);
       videoTimes[0].innerHTML = formatTime(videoContent.currentTime);
+      videoProgress[0].style.width = scale * 100 + "%";
+      videoProgress[1].style.width = scaleSuc * 100 + "%";
+      videoProgress[2].style.left = scale * 100 + "%";
     }
 
     function formatTime(number: number): string {
