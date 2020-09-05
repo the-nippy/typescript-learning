@@ -5,7 +5,7 @@
 do :
 
 ```
-npm isstall
+npm install
 ```
 
 then:

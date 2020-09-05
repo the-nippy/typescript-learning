@@ -1,7 +1,7 @@
 /*
  * @Author: xuwei
  * @Date: 2020-08-30 17:05:28
- * @LastEditTime: 2020-09-03 01:00:32
+ * @LastEditTime: 2020-09-03 22:46:56
  * @LastEditors: xuwei
  * @Description:
  */
@@ -112,24 +112,44 @@ class Video implements Icomponnet {
     let videoProgress = this.tempContainer.querySelectorAll(
       `.${styles["video-progress"]} div`
     );
+    let videoVolProgress = this.tempContainer.querySelectorAll(
+      `.${styles["video-volprogress"]} div`
+    );
+
+    videoContent.volume = 0.5;
+
+    if (this.settings.autoplay) {
+      //是否自动播放
+      timer = setInterval(playing, 1000);
+      videoContent.play();
+    }
+
+    this.tempContainer.addEventListener("mouseenter", function () {
+      //mouseenter 不会让子元素触发，不会有事件冒泡行为
+      videoControls.style.bottom = 0;
+    });
+    this.tempContainer.addEventListener("mouseleave", function () {
+      videoControls.style.bottom = "-50px";
+    });
 
     // 视频加载完毕
     videoContent.addEventListener("canplay", () => {
-      videoPlay.className = "iconfont icon-bofang";
-      // videoPlay.style.fontSize = "20px";
+      // videoPlay.className = videoPlay.className;  //加载时不应该改变 className
+      videoPlay.style.fontSize =
+        videoPlay.className === "icon icon-bofang" ? "20px" : "24px";
       videoTimes[1].innerHTML = formatTime(videoContent.duration);
     });
 
     // 播放事件
     videoContent.addEventListener("play", () => {
-      // videoPlay.style.fontSize = "24px";
+      videoPlay.style.fontSize = "24px";
       videoPlay.className = "iconfont icon-zanting";
       timer = setInterval(playing, 1000);
     });
 
     // 暂停事件
     videoContent.addEventListener("pause", () => {
-      // videoPlay.style.fontSize = "20px";
+      videoPlay.style.fontSize = "20px";
       videoPlay.className = "iconfont icon-bofang";
       clearInterval(timer);
     });
@@ -149,8 +169,6 @@ class Video implements Icomponnet {
     });
 
     videoProgress[2].addEventListener("mousedown", function (ev: MouseEvent) {
-      console.info("this", this);
-
       let downX = ev.pageX; //按下点的坐标
       let downL = this.offsetLeft; //  到当前有定位的组件节点的左偏移
       document.onmousemove = (ev: MouseEvent) => {
@@ -165,6 +183,30 @@ class Video implements Icomponnet {
         videoContent.currentTime = scale * videoContent.duration;
       };
       document.onmouseup = () => {
+        console.info("抬起时", videoPlay.className);
+        document.onmousemove = document.onmouseup = null;
+      };
+      ev.preventDefault();
+
+      // Todo 拖动的时候暂停/播放图标状态变化有问题
+    });
+
+    videoVolProgress[1].addEventListener("mousedown", function (
+      ev: MouseEvent
+    ) {
+      let downX = ev.pageX; //按下点的坐标
+      let downL = this.offsetLeft; //  到当前有定位的组件节点的左偏移
+      document.onmousemove = (ev: MouseEvent) => {
+        let scale =
+          (ev.pageX - downX + downL + 8) / this.parentNode.offsetWidth;
+        scale < 0 && (scale = 0);
+        scale > 1 && (scale = 1);
+        videoVolProgress[0].style.width = scale * 100 + "%";
+        this.style.left = scale * 100 + "%";
+        videoContent.volume = scale;
+      };
+      document.onmouseup = () => {
+        console.info("抬起时", videoPlay.className);
         document.onmousemove = document.onmouseup = null;
       };
       ev.preventDefault();

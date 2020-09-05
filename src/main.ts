@@ -1,7 +1,7 @@
 /*
  * @Author: xuwei
  * @Date: 2020-08-29 12:10:34
- * @LastEditTime: 2020-09-02 23:30:35
+ * @LastEditTime: 2020-09-03 22:45:21
  * @LastEditors: xuwei
  * @Description:
  */
@@ -29,6 +29,7 @@ for (let i = 0; i < list.length; i++) {
         video({
           url,
           elem: ele,
+          autoplay: true,
         });
       },
     });
