@@ -1,6 +1,12 @@
-### typescript-learning
+## typescript-learning
 
 一个 TypeScript 的学习记录仓库，包含一些简单 demo 项目和学习资料～
+
+### 相关学习资料：
+
+- TypeScript 入门，手册，配置，更新文档的资料库 -> <a href="https://github.com/zhongsp/TypeScript">zhongsp/TypeScript</a>
+
+### Demos
 
 mivideo: 用 TypeScript 编写，仿造小米官网底部视频播放的组件，由弹出框组件和视频播放组件组合而成。
 
